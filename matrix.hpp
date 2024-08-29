@@ -3,8 +3,6 @@
 
 #include "vector3d.hpp"
 #include <iostream>
-#include <iomanip>
-#include <cmath>
 
 class Matrix4x4 {
 private:
@@ -21,8 +19,12 @@ public:
     double* operator*(const double vec[4]) const;
     Matrix4x4 inverse() const;
     Matrix4x4 transpose() const;
+
+    Vector3D operator*(const Vector3D& vec) const;
+
     void print() const;
     friend std::ostream& operator<<(std::ostream& os, const Matrix4x4 matrix);
+
     static Matrix4x4 translation(double tx, double ty, double tz);
     static Matrix4x4 scaling(double sx, double sy, double sz);
     static Matrix4x4 rotationX(double angle);
