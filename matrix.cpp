@@ -208,3 +208,20 @@ Matrix4x4 Matrix4x4::rotationZ(double angle) {
     return result;
 }
 
+// Static method for creating a perspective projection matrix
+Matrix4x4 Matrix4x4::perspective(double fov, double aspect, double near, double far) {
+    Matrix4x4 result;  // Start with an identity matrix
+
+    double tanHalfFov = tan(fov / 2.0);
+    double range = near - far;
+
+    result.m[0][0] = 1.0 / (aspect * tanHalfFov);
+    result.m[1][1] = 1.0 / tanHalfFov;
+    result.m[2][2] = -(near + far) / range;
+    result.m[2][3] = 2.0 * near * far / range;
+    result.m[3][2] = -1.0;
+    result.m[3][3] = 0.0;
+
+    return result;  // Return the perspective projection matrix
+}
+
