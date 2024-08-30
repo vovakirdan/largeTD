@@ -2,7 +2,7 @@
 #include "matrix.hpp"
 #include "vector3d.hpp"
 
-int main() {
+void testMatrix() {
     Vector3D v1(1.0, 2.0, 3.0);
 
     // Translation matrix
@@ -52,6 +52,4 @@ int main() {
     Vector3D transformedPoint = point.transform(perspectiveMatrix);
 
     std::cout << "Transformed Point: " << transformedPoint << std::endl;;
-
-    return 0;
 }

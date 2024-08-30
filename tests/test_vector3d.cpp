@@ -44,13 +44,3 @@ void test_normalization() {
     std::cout << "Normalization Test: ";
     result.print();  // Expected Output: (0.267261, 0.534522, 0.801784)
 }
-
-int main() {
-    test_addition();
-    test_subtraction();
-    test_dot_product();
-    test_cross_product();
-    test_magnitude();
-    test_normalization();
-    return 0;
-}

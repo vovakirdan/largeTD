@@ -2,7 +2,7 @@
 #include "mesh.hpp"
 #include "matrix.hpp"
 
-int main() {
+void testMesh() {
     // Define some vertices
     std::vector<Vector3D> vertices = {
         Vector3D(0.0, 0.0, 0.0),
@@ -33,6 +33,4 @@ int main() {
     // Print the transformed vertices
     std::cout << "\nAfter scaling:\n";
     mesh.printVertices();
-
-    return 0;
 }

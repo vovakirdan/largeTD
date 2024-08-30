@@ -8,18 +8,14 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(include)
 
 # Source files
-file(GLOB SOURCES src/*.cpp)
+file(GLOB SOURCES "src/*.cpp")  # Assuming your source files are in src/
 
-# Main executable
+# Main executable target
 add_executable(LARGETD main.cpp ${SOURCES})
 
-# Test executables
-add_executable(test_matrix_and_vector tests/test_matrix_and_vector.cpp ${SOURCES})
-add_executable(test_mesh tests/test_mesh.cpp ${SOURCES})
-add_executable(test_vector3d tests/test_vector3d.cpp ${SOURCES})
+# Test executable for running all tests
+add_executable(tests tests/all_tests.cpp ${SOURCES})
 
 # Enable testing
 enable_testing()
-add_test(NAME MatrixAndVectorTests COMMAND test_matrix_and_vector)
-add_test(NAME MeshTests COMMAND test_mesh)
-add_test(NAME Vector3DTests COMMAND test_vector3d)
+add_test(NAME AllTests COMMAND tests)
