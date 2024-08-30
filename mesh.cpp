@@ -1,5 +1,9 @@
 #include "mesh.hpp"
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cmath>
+#include <algorithm>
 
 // Default constructor
 Mesh::Mesh() {}
@@ -154,5 +158,112 @@ void Mesh::printTexCoords() const {
     std::cout << "Texture Coordinates:\n";
     for (const auto& texCoord : texCoords) {
         std::cout << "(" << texCoord.first << ", " << texCoord.second << ")\n";
+    }
+}
+
+bool Mesh::loadFromOBJ(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file: " << filename << std::endl;
+        return false;
+    }
+
+    vertices.clear();
+    indices.clear();
+    normals.clear();
+    texCoords.clear();
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream ss(line);
+        std::string type;
+        ss >> type;
+
+        if (type == "v") {
+            double x, y, z;
+            ss >> x >> y >> z;
+            vertices.push_back(Vector3D(x, y, z));
+        } else if (type == "vn") {
+            double x, y, z;
+            ss >> x >> y >> z;
+            normals.push_back(Vector3D(x, y, z));
+        } else if (type == "vt") {
+            double u, v;
+            ss >> u >> v;
+            texCoords.push_back({u, v});
+        } else if (type == "f") {
+            int i1, i2, i3;
+            char slash;
+            ss >> i1 >> slash >> i2 >> slash >> i3;
+            indices.push_back(i1 - 1);
+            indices.push_back(i2 - 1);
+            indices.push_back(i3 - 1);
+        }
+    }
+
+    file.close();
+    return true;
+}
+
+bool Mesh::saveToOBJ(const std::string& filename) const {
+    std::ofstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file: " << filename << std::endl;
+        return false;
+    }
+
+    for (const auto& vertex : vertices) {
+        file << "v " << vertex.x << " " << vertex.y << " " << vertex.z << "\n";
+    }
+
+    for (const auto& normal : normals) {
+        file << "vn " << normal.x << " " << normal.y << " " << normal.z << "\n";
+    }
+
+    for (const auto& texCoord : texCoords) {
+        file << "vt " << texCoord.first << " " << texCoord.second << "\n";
+    }
+
+    for (size_t i = 0; i < indices.size(); i += 3) {
+        file << "f " << (indices[i] + 1) << "//" << (indices[i] + 1) << " "
+             << (indices[i+1] + 1) << "//" << (indices[i+1] + 1) << " "
+             << (indices[i+2] + 1) << "//" << (indices[i+2] + 1) << "\n";
+    }
+
+    file.close();
+    return true;
+}
+
+// This method reverses the direction of all normals in the mesh.
+void Mesh::flipNormals() {
+    for (auto& normal : normals) {
+        normal = normal * -1.0;
+    }
+}
+
+// This method merges vertices that are closer than a given epsilon (used to avoid duplicate vertices that are nearly identical).
+void Mesh::mergeVertices(double epsilon) {
+    std::vector<int> remap(vertices.size());
+    std::vector<Vector3D> uniqueVertices;
+
+    for (size_t i = 0; i < vertices.size(); ++i) {
+        bool merged = false;
+        for (size_t j = 0; j < uniqueVertices.size(); ++j) {
+            if ((vertices[i] - uniqueVertices[j]).magnitude() < epsilon) {
+                remap[i] = j;
+                merged = true;
+                break;
+            }
+        }
+        if (!merged) {
+            remap[i] = uniqueVertices.size();
+            uniqueVertices.push_back(vertices[i]);
+        }
+    }
+
+    vertices = uniqueVertices;
+
+    for (auto& index : indices) {
+        index = remap[index];
     }
 }

@@ -35,6 +35,20 @@ public:
     void printFaces() const;                      // Print all faces (indices)
     void printNormals() const;                          // Print all normals
     void printTexCoords() const;                        // Print all texture coordinates
+
+    // File I/O methods
+    bool loadFromOBJ(const std::string& filename);    // Load a mesh from an OBJ file
+    bool saveToOBJ(const std::string& filename) const; // Save the mesh to an OBJ file
+
+    // Manipulation methods
+    void flipNormals();                               // Flip the direction of the normals
+    void mergeVertices(double epsilon = 1e-5);        // Merge vertices that are close together
+    void smooth(double factor = 0.5);                           // Smooth the mesh
+    void subdivideSurface();                                    // Subdivide the surface for more detail
+    Mesh booleanUnion(const Mesh& other) const;                 // Union of two meshes
+    // todo implement it
+    Mesh booleanIntersection(const Mesh& other) const;          // Intersection of two meshes
+    Mesh booleanDifference(const Mesh& other) const;            // Difference between two meshes
 };
 
 #endif // MESH_HPP
