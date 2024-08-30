@@ -164,6 +164,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix4x4& matrix) {
         }
         os << std::endl;
     }
+    return os;
 }
 
 // Static method for creating a translation matrix

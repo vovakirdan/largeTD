@@ -23,7 +23,7 @@ public:
     Vector3D operator*(const Vector3D& vec) const;
 
     void print() const;
-    friend std::ostream& operator<<(std::ostream& os, const Matrix4x4 matrix);
+    friend std::ostream& operator<<(std::ostream& os, const Matrix4x4& matrix);
 
     static Matrix4x4 translation(double tx, double ty, double tz);
     static Matrix4x4 scaling(double sx, double sy, double sz);
