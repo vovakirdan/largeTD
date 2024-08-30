@@ -1,6 +1,8 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
+#include <cstdint>
+
 class Config {
 public:
     // Static instance method for singleton pattern
@@ -22,18 +24,24 @@ public:
     double getEpsilonIntersectsVectors() const {return EpsilonIntersectsVectors;}
     void setEpsilonIntersectsVectors(double value) {EpsilonIntersectsVectors = value;}
 
+    uint32_t getFramebufferDefaultColor() const {return FramebufferDefaultColor;}
+    void setFramebufferDefaultColor(uint32_t value) {FramebufferDefaultColor = value;}
+
 private:
     // Private constructor for singleton pattern
     Config() : PI(3.141592653589793),
     EpsilonMergeVertices(1e-5),
     SmoothFactor(0.5),
-    EpsilonIntersectsVectors(1e-5) {}
+    EpsilonIntersectsVectors(1e-5),
+    FramebufferDefaultColor(0x000000FF) // black
+    {}
 
     // Variables to hold the constant values
     double PI;
     double EpsilonMergeVertices;
     double EpsilonIntersectsVectors;
     double SmoothFactor;
+    uint32_t FramebufferDefaultColor;
 
     // Delete copy constructor and assignment operator
     Config(const Config&) = delete;
