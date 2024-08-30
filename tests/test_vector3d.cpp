@@ -1,5 +1,5 @@
 #include <iostream>
-#include "vector3d.cpp"  // Assuming Vector3D class is in vector3d.cpp
+#include "vector3d.hpp"  // Assuming Vector3D class is in vector3d.cpp
 
 void test_addition() {
     Vector3D v1(1.0, 2.0, 3.0);
