@@ -22,6 +22,8 @@ public:
     // '<<' overload
     friend std::ostream& operator<<(std::ostream& os, const Vector3D& v);
     Vector3D transform(const Matrix4x4& matrix) const;
+
+    bool intersects(const Vector3D& other, double epsilon = 1e-5) const;
 };
 
 #endif // VECTOR3d_HPP

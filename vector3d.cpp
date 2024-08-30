@@ -66,3 +66,12 @@ std::ostream& operator<<(std::ostream& os, const Vector3D& v) {
 Vector3D Vector3D::transform(const Matrix4x4& matrix) const {
     return matrix * (*this);
 }
+
+// Check if this vertex intersects with another vertex within an epsilon range
+bool Vector3D::intersects(const Vector3D& other, double epsilon) const {
+    return std::sqrt(
+        (x - other.x) * (x - other.x) +
+        (y - other.y) * (y - other.y) +
+        (z - other.z) * (z - other.z)
+    ) < epsilon;
+}

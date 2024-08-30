@@ -355,31 +355,53 @@ Mesh Mesh::booleanUnion(const Mesh& other) const {
 }
 
 Mesh Mesh::booleanIntersection(const Mesh& other) const {
-    // todo: Handle indices to create new faces (not implemented in this simplified version)
-    return other;
-    // Mesh result;
-    // std::set<Vector3D> setA(vertices.begin(), vertices.end());
-    // std::set<Vector3D> setB(other.vertices.begin(), other.vertices.end());
+    Mesh result;
 
-    // for (const auto& vertex : setA) {
-    //     if (setB.find(vertex) != setB.end()) {
-    //         result.addVertex(vertex);
-    //     }
-    // }
-    // return result;
+    // Iterate through all faces of the current mesh
+    for (const auto& vertex : vertices) {
+        bool intersects = false;
+
+        // Check against all faces of the other mesh
+        for (const auto& otherVertex : other.vertices) {
+            if (vertex.intersects(otherVertex)) {
+                intersects = true;
+                break;
+            }
+        }
+
+        // If there is an intersection, add it to the result mesh
+        if (intersects) {
+            result.addVertex(vertex);
+        }
+    }
+
+    // need handle face indices and normals if necessary
+    return result;
 }
 
 Mesh Mesh::booleanDifference(const Mesh& other) const {
-    // todo: Handle indices to create new faces (not implemented in this simplified version)
-    return other;
-    // Mesh result;
-    // std::set<Vector3D> setA(vertices.begin(), vertices.end());
-    // std::set<Vector3D> setB(other.vertices.begin(), other.vertices.end());
+    Mesh result = *this;
 
-    // for (const auto& vertex : setA) {
-    //     if (setB.find(vertex) == setB.end()) {
-    //         result.addVertex(vertex);
-    //     }
-    // }
-    // return result;
+    // Iterate through all faces of the current mesh
+    for (auto it = result.vertices.begin(); it != result.vertices.end(); ) {
+        bool intersects = false;
+
+        // Check against all faces of the other mesh
+        for (const auto& otherVertex : other.vertices) {
+            if (it->intersects(otherVertex)) {  // todo test it
+                intersects = true;
+                break;
+            }
+        }
+
+        // If there is an intersection, remove the intersected part from the mesh
+        if (intersects) {
+            it = result.vertices.erase(it); // Remove the intersected face
+        } else {
+            ++it;
+        }
+    }
+
+    // need handle face indices and normals if necessary
+    return result;
 }
