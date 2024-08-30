@@ -4,7 +4,7 @@
 * [Features](#features)
 * [Prerequisites](#prerequisites)
 * ### [TODO LIST](#to-do-list)
-    * [Expand 3D Model Handling](#1-expand-3d-model-handling)
+    * [Expand 3D Model Handling](#1-expand-3d-model-handling)✅
     * [Camera and Viewport](#2-camera-and-viewport)
     * [Rendering Pipeline](#3-rendering-pipeline)
     * [User Interface (UI) Integration](#4-user-interface-ui-integration)
@@ -33,7 +33,7 @@ Before you begin, ensure you have met the following requirements:
 ## 1. Expand 3D Model Handling
 * ### 3D Mesh Representation:
 
-    * Create a `Mesh` class to represent 3D objects, which will consist of vertices (using `Vector3D`) and possibly indices for defining faces (triangles or quads).
+    * Create a `Mesh` class to represent 3D objects, which will consist of vertices (using `Vector3D`) and possibly indices for defining faces (triangles or quads).✅
     * Implement functions for loading, saving, and manipulating these meshes.
 * ### Model Transformation:
 

@@ -4,6 +4,9 @@
 #include <sstream>
 #include <cmath>
 #include <algorithm>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
 
 // Default constructor
 Mesh::Mesh() {}
@@ -125,7 +128,6 @@ void Mesh::scale(double sx, double sy, double sz) {
     transform(scalingMatrix);  // Apply scaling to the entire mesh
 }
 
-
 // Print all vertices
 void Mesh::printVertices() const {
     std::cout << "Vertices:\n";
@@ -241,7 +243,8 @@ void Mesh::flipNormals() {
     }
 }
 
-// This method merges vertices that are closer than a given epsilon (used to avoid duplicate vertices that are nearly identical).
+/*This method merges vertices that are closer than a given epsilon
+ (used to avoid duplicate vertices that are nearly identical).*/
 void Mesh::mergeVertices(double epsilon) {
     std::vector<int> remap(vertices.size());
     std::vector<Vector3D> uniqueVertices;
@@ -266,4 +269,117 @@ void Mesh::mergeVertices(double epsilon) {
     for (auto& index : indices) {
         index = remap[index];
     }
+}
+
+/*Simple Laplacian smoothing algorithm,
+ which adjusts each vertex based on the average position of its neighbors*/
+void Mesh::smooth(double factor) {
+    std::unordered_map<int, std::vector<int>> adjacencyList;
+
+    for (size_t i = 0; i < indices.size(); i += 3) {
+        adjacencyList[indices[i]].push_back(indices[i + 1]);
+        adjacencyList[indices[i]].push_back(indices[i + 2]);
+        adjacencyList[indices[i + 1]].push_back(indices[i]);
+        adjacencyList[indices[i + 1]].push_back(indices[i + 2]);
+        adjacencyList[indices[i + 2]].push_back(indices[i]);
+        adjacencyList[indices[i + 2]].push_back(indices[i + 1]);
+    }
+
+    std::vector<Vector3D> newVertices = vertices;
+    for (const auto& pair : adjacencyList) {
+        int index = pair.first;
+        Vector3D sum(0, 0, 0);
+        for (int neighbor : pair.second) {
+            sum = sum + vertices[neighbor];
+        }
+        Vector3D average = sum * (1.0 / pair.second.size());
+        newVertices[index] = vertices[index] * (1.0 - factor) + average * factor;
+    }
+
+    vertices = newVertices;
+}
+
+// Custom hash function for std::pair<int, int>
+struct pair_hash {
+    template <class T1, class T2>
+    std::size_t operator()(const std::pair<T1, T2>& pair) const {
+        return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
+    }
+};
+
+/*Subdivision Surfaces (Loop Subdivision)
+Basic subdivision surface algorithm, like Loop Subdivision, to add more detail to the mesh*/
+void Mesh::subdivideSurface() {
+    std::unordered_map<std::pair<int, int>, int, pair_hash> midpoints;
+    std::vector<Vector3D> newVertices = vertices;
+    std::vector<int> newIndices;
+
+    auto getMidpoint = [&](int i1, int i2) -> int {
+        if (i2 < i1) std::swap(i1, i2);
+        auto it = midpoints.find({i1, i2});
+        if (it != midpoints.end()) {
+            return it->second;
+        } else {
+            Vector3D mid = (vertices[i1] + vertices[i2]) * 0.5;
+            newVertices.push_back(mid);
+            int index = newVertices.size() - 1;
+            midpoints[{i1, i2}] = index;
+            return index;
+        }
+    };
+
+    for (size_t i = 0; i < indices.size(); i += 3) {
+        int i1 = indices[i];
+        int i2 = indices[i + 1];
+        int i3 = indices[i + 2];
+
+        int m12 = getMidpoint(i1, i2);
+        int m23 = getMidpoint(i2, i3);
+        int m31 = getMidpoint(i3, i1);
+
+        newIndices.push_back(i1); newIndices.push_back(m12); newIndices.push_back(m31);
+        newIndices.push_back(i2); newIndices.push_back(m23); newIndices.push_back(m12);
+        newIndices.push_back(i3); newIndices.push_back(m31); newIndices.push_back(m23);
+        newIndices.push_back(m12); newIndices.push_back(m23); newIndices.push_back(m31);
+    }
+
+    vertices = newVertices;
+    indices = newIndices;
+}
+
+Mesh Mesh::booleanUnion(const Mesh& other) const {
+    Mesh result = *this;
+    result.merge(other);
+    result.mergeVertices();  // Optional: merge close vertices
+    return result;
+}
+
+Mesh Mesh::booleanIntersection(const Mesh& other) const {
+    // todo: Handle indices to create new faces (not implemented in this simplified version)
+    return other;
+    // Mesh result;
+    // std::set<Vector3D> setA(vertices.begin(), vertices.end());
+    // std::set<Vector3D> setB(other.vertices.begin(), other.vertices.end());
+
+    // for (const auto& vertex : setA) {
+    //     if (setB.find(vertex) != setB.end()) {
+    //         result.addVertex(vertex);
+    //     }
+    // }
+    // return result;
+}
+
+Mesh Mesh::booleanDifference(const Mesh& other) const {
+    // todo: Handle indices to create new faces (not implemented in this simplified version)
+    return other;
+    // Mesh result;
+    // std::set<Vector3D> setA(vertices.begin(), vertices.end());
+    // std::set<Vector3D> setB(other.vertices.begin(), other.vertices.end());
+
+    // for (const auto& vertex : setA) {
+    //     if (setB.find(vertex) == setB.end()) {
+    //         result.addVertex(vertex);
+    //     }
+    // }
+    // return result;
 }
