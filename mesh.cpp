@@ -91,6 +91,36 @@ void Mesh::subdivideFaces() {
     indices = newIndices;
 }
 
+// Translate the entire mesh
+void Mesh::translate(double tx, double ty, double tz) {
+    Matrix4x4 translationMatrix = Matrix4x4::translation(tx, ty, tz);
+    transform(translationMatrix);  // Apply translation to the entire mesh
+}
+
+// Rotate the mesh around the X-axis
+void Mesh::rotateX(double angle) {
+    Matrix4x4 rotationMatrix = Matrix4x4::rotationX(angle);
+    transform(rotationMatrix);  // Apply rotation around X-axis to the entire mesh
+}
+
+// Rotate the mesh around the Y-axis
+void Mesh::rotateY(double angle) {
+    Matrix4x4 rotationMatrix = Matrix4x4::rotationY(angle);
+    transform(rotationMatrix);  // Apply rotation around Y-axis to the entire mesh
+}
+
+// Rotate the mesh around the Z-axis
+void Mesh::rotateZ(double angle) {
+    Matrix4x4 rotationMatrix = Matrix4x4::rotationZ(angle);
+    transform(rotationMatrix);  // Apply rotation around Z-axis to the entire mesh
+}
+
+// Scale the entire mesh
+void Mesh::scale(double sx, double sy, double sz) {
+    Matrix4x4 scalingMatrix = Matrix4x4::scaling(sx, sy, sz);
+    transform(scalingMatrix);  // Apply scaling to the entire mesh
+}
+
 
 // Print all vertices
 void Mesh::printVertices() const {

@@ -25,6 +25,11 @@ public:
     void transform(const Matrix4x4& matrix);      // Transform the entire mesh
     void merge(const Mesh& other);
     void subdivideFaces();
+    void translate(double tx, double ty, double tz);   // Translate the entire mesh
+    void rotateX(double angle);                        // Rotate the mesh around the X-axis
+    void rotateY(double angle);                        // Rotate the mesh around the Y-axis
+    void rotateZ(double angle);                        // Rotate the mesh around the Z-axis
+    void scale(double sx, double sy, double sz);       // Scale the entire mesh
 
     void printVertices() const;                   // Print all vertices
     void printFaces() const;                      // Print all faces (indices)
