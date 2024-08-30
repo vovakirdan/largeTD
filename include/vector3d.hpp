@@ -2,6 +2,7 @@
 #define VECTOR3D_HPP
 
 #include <iostream>
+#include "Config.hpp"
 
 class Matrix4x4;
 
@@ -23,7 +24,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Vector3D& v);
     Vector3D transform(const Matrix4x4& matrix) const;
 
-    bool intersects(const Vector3D& other, double epsilon = 1e-5) const;
+    bool intersects(const Vector3D& other, double epsilon = Config::instance().getEpsilonIntersectsVectors()) const;
 };
 
 #endif // VECTOR3d_HPP

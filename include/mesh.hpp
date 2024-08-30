@@ -4,6 +4,7 @@
 #include <vector>
 #include "vector3d.hpp"
 #include "matrix.hpp"
+#include "Config.hpp"
 
 class Mesh {
 private:
@@ -42,8 +43,8 @@ public:
 
     // Manipulation methods
     void flipNormals();                               // Flip the direction of the normals
-    void mergeVertices(double epsilon = 1e-5);        // Merge vertices that are close together
-    void smooth(double factor = 0.5);                           // Smooth the mesh
+    void mergeVertices(double epsilon = Config::instance().getEpsilonMergeVertices());        // Merge vertices that are close together
+    void smooth(double factor = Config::instance().getSmoothFactor());                           // Smooth the mesh
     void subdivideSurface();                                    // Subdivide the surface for more detail
     Mesh booleanUnion(const Mesh& other) const;                 // Union of two meshes
     // todo implement it
