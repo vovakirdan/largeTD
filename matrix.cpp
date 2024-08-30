@@ -157,6 +157,15 @@ void Matrix4x4::print() const {
     }
 }
 
+std::ostream& operator<<(std::ostream& os, const Matrix4x4& matrix) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            os << std::setw(10) << matrix.m[i][j] << " ";
+        }
+        os << std::endl;
+    }
+}
+
 // Static method for creating a translation matrix
 Matrix4x4 Matrix4x4::translation(double tx, double ty, double tz) {
     Matrix4x4 result;
@@ -223,5 +232,19 @@ Matrix4x4 Matrix4x4::perspective(double fov, double aspect, double near, double 
     result.m[3][3] = 0.0;
 
     return result;  // Return the perspective projection matrix
+}
+
+// Static method for creating an orthographic projection matrix
+Matrix4x4 Matrix4x4::orthographic(double left, double right, double bottom, double top, double near, double far) {
+    Matrix4x4 result;  // Start with an identity matrix
+
+    result.m[0][0] = 2.0 / (right - left);
+    result.m[1][1] = 2.0 / (top - bottom);
+    result.m[2][2] = -2.0 / (far - near);
+    result.m[0][3] = -(right + left) / (right - left);
+    result.m[1][3] = -(top + bottom) / (top - bottom);
+    result.m[2][3] = -(far + near) / (far - near);
+
+    return result;  // Return the orthographic projection matrix
 }
 

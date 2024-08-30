@@ -31,6 +31,7 @@ public:
     static Matrix4x4 rotationY(double angle);
     static Matrix4x4 rotationZ(double angle);
     static Matrix4x4 perspective(double fov, double aspect, double near, double far);
+    static Matrix4x4 orthographic(double left, double right, double bottom, double top, double near, double far);
 };
 
 #endif // MATRIX4x4_HPP
