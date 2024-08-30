@@ -51,7 +51,7 @@ int main() {
     Vector3D point(1.0, 1.0, -5.0);
     Vector3D transformedPoint = point.transform(perspectiveMatrix);
 
-    std::cout << "Transformed Point: " << transformedPoint;
+    std::cout << "Transformed Point: " << transformedPoint << std::endl;;
 
     return 0;
 }
