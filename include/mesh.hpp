@@ -18,6 +18,9 @@ public:
     Mesh(const std::vector<Vector3D>& vertices);    // Constructor with vertices only
     Mesh(const std::vector<Vector3D>& vertices, const std::vector<int>& indices); // Constructor with vertices and indices
 
+    std::vector<int> getIndices() const {return indices;}
+    std::vector<Vector3D> getVertices() const {return vertices;}
+
     void addVertex(const Vector3D& vertex);       // Add a single vertex
     void addFace(int i1, int i2, int i3);         // Add a face using 3 vertex indices
     void addNormal(const Vector3D& normal);       // Add a single normal
