@@ -27,13 +27,17 @@ public:
     uint32_t getFramebufferDefaultColor() const {return FramebufferDefaultColor;}
     void setFramebufferDefaultColor(uint32_t value) {FramebufferDefaultColor = value;}
 
+    uint32_t getDefaultMeshColor() const {return DefaultMeshColor;}
+    void setDefaultMeshColor(uint32_t value) {DefaultMeshColor = value;}
+
 private:
     // Private constructor for singleton pattern
     Config() : PI(3.141592653589793),
     EpsilonMergeVertices(1e-5),
     SmoothFactor(0.5),
     EpsilonIntersectsVectors(1e-5),
-    FramebufferDefaultColor(0x000000FF) // black
+    FramebufferDefaultColor(0x000000FF), // black
+    DefaultMeshColor(0x000000FF)  // black
     {}
 
     // Variables to hold the constant values
@@ -42,6 +46,7 @@ private:
     double EpsilonIntersectsVectors;
     double SmoothFactor;
     uint32_t FramebufferDefaultColor;
+    uint32_t DefaultMeshColor;
 
     // Delete copy constructor and assignment operator
     Config(const Config&) = delete;
