@@ -1,8 +1,8 @@
-#include "camera.hpp"
-#include "mesh.hpp"
-#include "viewport.hpp"
-#include "vector3d.hpp"
-#include "matrix.hpp"
+#include "core/camera.hpp"
+#include "core/mesh.hpp"
+#include "core/viewport.hpp"
+#include "core/vector3d.hpp"
+#include "core/matrix.hpp"
 
 int main() {
     // Initialize the camera at (0, 0, 10), looking at the origin (0, 0, 0), with up direction (0, 1, 0)
