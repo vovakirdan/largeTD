@@ -11,9 +11,10 @@ public:
     virtual void handleEvent(const EventHandler& event) = 0;
 };
 
-class UIButton : public UIComponent {
-    // Implement a basic button
-};
+// Removed this declaration
+// class UIButton : public UIComponent {
+//     // Implement a basic button
+// };
 
 class UIManager {
 public:
