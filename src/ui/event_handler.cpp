@@ -7,7 +7,6 @@
 
 
 EventHandler::EventHandler() {}
-
 EventHandler::~EventHandler() {}
 
 void EventHandler::pollEvents() {

@@ -2,7 +2,7 @@
 #define WINDOW_HPP
 
 #include <string>
-#include "framebuffer.hpp"
+#include "../core/framebuffer.hpp"
 
 // class Framebuffer; // Forward declaration of Framebuffer class
 
