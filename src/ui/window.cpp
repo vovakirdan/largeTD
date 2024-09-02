@@ -1,4 +1,6 @@
 #include "window.hpp"
+#include "../core/framebuffer.hpp"
+
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -9,7 +11,7 @@
 
 #ifdef _WIN32
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    Window* window = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    CustomWindow* window = reinterpret_cast<CustomWindow*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
     if (window) {
         switch (uMsg) {
             case WM_DESTROY:
@@ -23,34 +25,34 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 }
 #endif
 
-Window::Window(int width, int height, const std::string& title)
-    : width(width), height(height), title(title), platformWindow(0) {
+CustomWindow::CustomWindow(int width, int height, const std::string& title)
+        : width(width), height(height), title(title), platformWindow(0) {
     initialize();
 }
 
-Window::~Window() {
+CustomWindow::~CustomWindow() {
     cleanup();
 }
 
 #ifdef _WIN32
-void Window::initialize() {
+void CustomWindow::initialize() {
     WNDCLASS wc = {};
     wc.lpfnWndProc = WindowProc;
     wc.hInstance = GetModuleHandle(NULL);
-    wc.lpszClassName = "WindowClass";
+    wc.lpszClassName = "CustomWindowClass";
 
     RegisterClass(&wc);
 
     platformWindow = CreateWindowEx(
-        0,
-        "WindowClass",
-        title.c_str(),
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, width, height,
-        NULL,
-        NULL,
-        GetModuleHandle(NULL),
-        NULL
+            0,
+            "CustomWindowClass",
+            title.c_str(),
+            WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+            NULL,
+            NULL,
+            GetModuleHandle(NULL),
+            NULL
     );
 
     if (platformWindow == NULL) {
@@ -62,14 +64,14 @@ void Window::initialize() {
     ShowWindow(reinterpret_cast<HWND>(platformWindow), SW_SHOW);
 }
 
-void Window::cleanup() {
+void CustomWindow::cleanup() {
     if (platformWindow) {
         DestroyWindow(reinterpret_cast<HWND>(platformWindow));
         platformWindow = nullptr;
     }
 }
 
-void Window::mainLoop() {
+void CustomWindow::mainLoop() {
     MSG msg = {};
     while (msg.message != WM_QUIT) {
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -81,7 +83,7 @@ void Window::mainLoop() {
     }
 }
 
-void Window::present(Framebuffer& framebuffer) {
+void CustomWindow::present(Framebuffer& framebuffer) {
     HDC hdc = GetDC(reinterpret_cast<HWND>(platformWindow));
     BITMAPINFO bmi = {};
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -99,7 +101,7 @@ void Window::present(Framebuffer& framebuffer) {
 }
 #elif defined(__unix__)
 
-void Window::initialize() {
+void CustomWindow::initialize() {
     Display* display = XOpenDisplay(NULL);
     if (!display) {
         std::cerr << "Cannot open display\n";
@@ -114,7 +116,7 @@ void Window::initialize() {
     XMapWindow(display, platformWindow);
 }
 
-void Window::cleanup() {
+void CustomWindow::cleanup() {
     if (platformWindow) {
         Display* display = XOpenDisplay(NULL);
         XDestroyWindow(display, platformWindow);
@@ -123,7 +125,7 @@ void Window::cleanup() {
     }
 }
 
-void Window::mainLoop() {
+void CustomWindow::mainLoop() {
     Display* display = XOpenDisplay(NULL);
     XEvent event;
     while (true) {
@@ -137,16 +139,40 @@ void Window::mainLoop() {
     }
 }
 
-void Window::present(Framebuffer& framebuffer) {
-    // TODO: Implement framebuffer drawing for X11 (or use shared memory)
+void CustomWindow::present(Framebuffer& framebuffer) {
+    Display* display = XOpenDisplay(NULL);
+    if (!display) {
+        std::cerr << "Cannot open display\n";
+        return;
+    }
+
+    int screen = DefaultScreen(display);
+
+    XImage* image = XCreateImage(display, DefaultVisual(display, screen), DefaultDepth(display, screen), ZPixmap, 0,
+                                 (char*)framebuffer.getBuffer().data(), width, height, 32, 0);
+
+    if (!image) {
+        std::cerr << "Failed to create XImage from framebuffer\n";
+        XCloseDisplay(display);
+        return;
+    }
+
+    GC gc = DefaultGC(display, screen);
+    XPutImage(display, platformWindow, gc, image, 0, 0, 0, 0, width, height);
+
+    image->data = NULL;  // Set data to NULL so that XDestroyImage will not free it
+    XDestroyImage(image);
+
+    XFlush(display);
+    XCloseDisplay(display);
 }
 
 #endif
 
-int Window::getWidth() const {
+int CustomWindow::getWidth() const {
     return width;
 }
 
-int Window::getHeight() const {
+int CustomWindow::getHeight() const {
     return height;
 }

@@ -1,15 +1,14 @@
-#ifndef WINDOW_HPP
-#define WINDOW_HPP
+#ifndef CUSTOM_WINDOW_HPP
+#define CUSTOM_WINDOW_HPP
 
 #include <string>
-#include "../core/framebuffer.hpp"
 
-// class Framebuffer; // Forward declaration of Framebuffer class
+class Framebuffer; // Forward declaration of Framebuffer class
 
-class Window {
+class CustomWindow {
 public:
-    Window(int width, int height, const std::string& title);
-    virtual ~Window();
+    CustomWindow(int width, int height, const std::string& title);
+    virtual ~CustomWindow();
 
     virtual void initialize() = 0;
     virtual void cleanup() = 0;
@@ -24,12 +23,11 @@ protected:
     int height;
     std::string title;
 
-    // Use the correct type for platform-specific window handles
-    #ifdef _WIN32
-        HWND platformWindow;
-    #elif defined(__unix__)
-        unsigned long platformWindow;  // Corresponds to X11's Window type
-    #endif
+#ifdef _WIN32
+    HWND platformWindow;
+#elif defined(__unix__)
+    unsigned long platformWindow;  // Corresponds to X11's Window type
+#endif
 };
 
-#endif // WINDOW_HPP
+#endif // CUSTOM_WINDOW_HPP
