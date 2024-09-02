@@ -3,19 +3,51 @@
 #include <windows.h>
 #else
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <unistd.h>
 #endif
-
 
 EventHandler::EventHandler() {}
 EventHandler::~EventHandler() {}
 
 void EventHandler::pollEvents() {
-    // This function should be called in the main loop to process events.
+#ifdef _WIN32
     MSG msg = {};
     while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+#elif defined(__unix__)
+    Display* display = XOpenDisplay(NULL);
+    if (!display) {
+        return; // Handle error
+    }
+
+    XEvent event;
+    while (XPending(display)) {
+        XNextEvent(display, &event);
+        switch (event.type) {
+            case KeyPress:
+                onKeyDown(XLookupKeysym(&event.xkey, 0));
+                break;
+            case KeyRelease:
+                onKeyUp(XLookupKeysym(&event.xkey, 0));
+                break;
+            case MotionNotify:
+                onMouseMove(event.xmotion.x, event.xmotion.y);
+                break;
+            case ButtonPress:
+                onMouseClick(event.xbutton.button, ButtonPress);
+                break;
+            case ButtonRelease:
+                onMouseClick(event.xbutton.button, ButtonRelease);
+                break;
+            default:
+                break;
+        }
+    }
+    XCloseDisplay(display);
+#endif
 }
 
 void EventHandler::onKeyDown(int key) {
@@ -34,8 +66,7 @@ void EventHandler::onMouseClick(int button, int action) {
     // Handle mouse click events here
 }
 
-// Platform-specific code to map WinAPI events to EventHandler methods
-
+#ifdef _WIN32
 LRESULT CALLBACK EventProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     EventHandler* handler = reinterpret_cast<EventHandler*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
     if (!handler) return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -66,3 +97,4 @@ LRESULT CALLBACK EventProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
+#endif
