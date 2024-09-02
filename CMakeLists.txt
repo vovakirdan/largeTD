@@ -1,42 +1,35 @@
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra
-SRC_DIR = src
-CORE_DIR = $(SRC_DIR)/core
-UI_DIR = $(SRC_DIR)/ui
-PLATFORM_DIR = $(SRC_DIR)/platform
-OBJ_DIR = build
+cmake_minimum_required(VERSION 3.1)
 
-# List of core source files
-CORE_SRCS = $(CORE_DIR)/matrix.cpp $(CORE_DIR)/vector3d.cpp $(CORE_DIR)/mesh.cpp \
-            $(CORE_DIR)/renderer.cpp $(CORE_DIR)/viewport.cpp $(CORE_DIR)/framebuffer.cpp \
-            $(CORE_DIR)/camera.cpp
+project(renderer_app)
 
-# List of UI source files
-UI_SRCS = $(UI_DIR)/window.cpp $(UI_DIR)/event_handler.cpp $(UI_DIR)/ui_renderer.cpp \
-          $(UI_DIR)/ui_manager.cpp
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 
-# Platform-specific source files (you can switch between different platforms)
-PLATFORM_SRCS = $(PLATFORM_DIR)/windows/window_winapi.cpp $(PLATFORM_DIR)/windows/event_handler_winapi.cpp
-# PLATFORM_SRCS = $(PLATFORM_DIR)/linux/window_x11.cpp $(PLATFORM_DIR)/linux/event_handler_x11.cpp
+include_directories(${CMAKE_SOURCE_DIR}/usr/include/X11)
 
-# Main application source
-MAIN_SRCS = src/main.cpp
+set(SRCS
+        src/core/matrix.cpp
+        src/core/vector3d.cpp
+        src/core/mesh.cpp
+        src/core/renderer.cpp
+        src/core/viewport.cpp
+        src/core/framebuffer.cpp
+        src/core/camera.cpp
+        src/ui/window.cpp
+        src/ui/event_handler.cpp
+        src/ui/ui_renderer.cpp
+        src/ui/ui_manager.cpp
+)
 
-# Object files
-OBJS = $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(CORE_SRCS) $(UI_SRCS) $(PLATFORM_SRCS) $(MAIN_SRCS))
+if (WIN32)
+    list(APPEND SRCS
+            src/platform/windows/window_winapi.cpp
+    )
+else ()
+    list(APPEND SRCS
+            src/platform/linux/window_x11.cpp
+    )
+endif ()
 
-# Target executable
-TARGET = renderer_app
-
-# Rule to build the project
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
-
-$(OBJ_DIR)/%.o: %.cpp
-	@mkdir -p $(OBJ_DIR)/core $(OBJ_DIR)/ui $(OBJ_DIR)/platform/windows $(OBJ_DIR)/platform/linux
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-clean:
-	rm -rf $(OBJ_DIR) $(TARGET)
+add_executable(${PROJECT_NAME} ${SRCS})
