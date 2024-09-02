@@ -1,33 +1,35 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include <iostream>
+#include <string>
+#include "framebuffer.hpp"
+
+// class Framebuffer; // Forward declaration of Framebuffer class
 
 class Window {
 public:
-    // Constructor to create a window of a specific size
     Window(int width, int height, const std::string& title);
-    ~Window();
+    virtual ~Window();
 
-    // Main loop to run the window
-    void mainLoop();
+    virtual void initialize() = 0;
+    virtual void cleanup() = 0;
+    virtual void mainLoop() = 0;
+    virtual void present(Framebuffer& framebuffer) = 0;
 
-    // Getters
     int getWidth() const;
     int getHeight() const;
 
-private:
-    int width, height;
+protected:
+    int width;
+    int height;
     std::string title;
 
-    // Platform-specific window handle (like HWND on Windows, Window on X11)
-    void* windowHandle;
-
-    // Initialize the window (platform-specific)
-    void initialize();
-
-    // Cleanup resources (platform-specific)
-    void cleanup();
+    // Use the correct type for platform-specific window handles
+    #ifdef _WIN32
+        HWND platformWindow;
+    #elif defined(__unix__)
+        unsigned long platformWindow;  // Corresponds to X11's Window type
+    #endif
 };
 
 #endif // WINDOW_HPP
