@@ -5,15 +5,15 @@
 * [Prerequisites](#prerequisites)
 * ### [TODO LIST](#to-do-list)
     * [Expand 3D Model Handling](#1-expand-3d-model-handling)✅
-    * [Camera and Viewport](#2-camera-and-viewport)
-    * [Rendering Pipeline](#3-rendering-pipeline)
-    * [User Interface (UI) Integration](#4-user-interface-ui-integration)
+    * [Camera and Viewport](#2-camera-and-viewport)✅
+    * [Rendering Pipeline](#3-rendering-pipeline)✅
+    * [User Interface (UI) Integration](#4-user-interface-ui-integration)🔜
     * [File Input/Output](#5-file-inputoutput)
     * [Testing and Optimization](#6-testing-and-optimization)
     * [Advanced Features (Long-term Goals)](#7-advanced-features-long-term-goals)
 
 ## Overview
-This project is a basic 3D renderer written from scratch in [language used]. It is designed to provide a fundamental understanding of how 3D rendering works by implementing core concepts such as vertex transformation, perspective projection, and rasterization. The renderer supports basic shapes, simple shading, and a single light source.
+This project is a basic 3D renderer written from scratch in C++. It is designed to provide a fundamental understanding of how 3D rendering works by implementing core concepts such as vertex transformation, perspective projection, and rasterization. The renderer supports basic shapes, simple shading, and a single light source.
 
 ## Features
 * 3D Model Loading: Supports basic geometric shapes and custom models in [supported formats, if any].
