@@ -1,3 +1,6 @@
+#ifdef _WIN32  // This ensures that the code inside only compiles on Windows
+
+#include <windows.h>  // Include Windows header for LRESULT, HWND, etc.
 #include "window_winapi.hpp"
 
 LRESULT CALLBACK WindowWinAPI::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -15,7 +18,7 @@ LRESULT CALLBACK WindowWinAPI::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, L
 }
 
 WindowWinAPI::WindowWinAPI(int width, int height, const std::string& title)
-    : Window(width, height, title), platformWindow(nullptr) {
+    : CustomWindow(width, height, title), platformWindow(nullptr) {
     initialize();
 }
 
@@ -95,3 +98,5 @@ void WindowWinAPI::present(Framebuffer& framebuffer) {
 
     ReleaseDC(reinterpret_cast<HWND>(platformWindow), hdc);
 }
+
+#endif  // End of _WIN32 guard

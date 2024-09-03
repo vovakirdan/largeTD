@@ -2,3 +2,5 @@ ltd
 .vscode/
 build/
 temp*
+.idea/
+cmake-build-debug/

@@ -4,7 +4,6 @@
 #include "../../ui/window.hpp"
 #ifdef _WIN32
 #include <windows.h>
-#endif
 
 class WindowWinAPI : public CustomWindow {
 public:
@@ -20,4 +19,5 @@ private:
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
+#endif
 #endif // WINDOW_WINAPI_HPP

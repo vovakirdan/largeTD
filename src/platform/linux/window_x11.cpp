@@ -3,7 +3,7 @@
 #include <iostream>
 
 WindowX11::WindowX11(int width, int height, const std::string& title)
-    : Window(width, height, title), display(nullptr) {
+    : CustomWindow(width, height, title), display(nullptr) {  // Replace Window with CustomWindow
     // No need to initialize platformWindow here, it will be done in initialize()
 }
 
