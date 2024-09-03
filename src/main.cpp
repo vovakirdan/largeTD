@@ -30,6 +30,7 @@ int main() {
 
     // Print the screen coordinates
     std::cout << "Screen coordinates: (" << pointOnScreen.x << ", " << pointOnScreen.y << ")" << std::endl;
+    // generate an entry point in app
 
     return 0;
 }

@@ -23,18 +23,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
-#endif
 
-CustomWindow::CustomWindow(int width, int height, const std::string& title)
-        : width(width), height(height), title(title), platformWindow(0) {
-    initialize();
-}
-
-CustomWindow::~CustomWindow() {
-    cleanup();
-}
-
-#ifdef _WIN32
 void CustomWindow::initialize() {
     WNDCLASS wc = {};
     wc.lpfnWndProc = WindowProc;

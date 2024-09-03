@@ -1,10 +1,12 @@
 #ifndef WINDOW_WINAPI_HPP
 #define WINDOW_WINAPI_HPP
 
-#include "window.hpp"
+#include "../../ui/window.hpp"
+#ifdef _WIN32
 #include <windows.h>
+#endif
 
-class WindowWinAPI : public Window {
+class WindowWinAPI : public CustomWindow {
 public:
     WindowWinAPI(int width, int height, const std::string& title);
     ~WindowWinAPI() override;
