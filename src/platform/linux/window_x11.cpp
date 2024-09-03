@@ -3,13 +3,14 @@
 #include <iostream>
 
 WindowX11::WindowX11(int width, int height, const std::string& title)
-    : CustomWindow(width, height, title), display(nullptr) {  // Replace Window with CustomWindow
-    // No need to initialize platformWindow here, it will be done in initialize()
+    : CustomWindow(width, height, title), display(nullptr) {
+    initialize();  // Call initialize from within the derived class constructor
 }
 
 WindowX11::~WindowX11() {
-    cleanup();
+    cleanup();  // Ensure cleanup happens in the derived class destructor
 }
+
 
 void WindowX11::initialize() {
     display = XOpenDisplay(NULL);

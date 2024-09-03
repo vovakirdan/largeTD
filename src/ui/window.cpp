@@ -90,6 +90,17 @@ void CustomWindow::present(Framebuffer& framebuffer) {
 }
 #elif defined(__unix__)
 
+CustomWindow::CustomWindow(int width, int height, const std::string& title)
+    : width(width), height(height), title(title), platformWindow(0) {
+    // Constructor logic
+    // Note: Do not call initialize() here
+}
+
+CustomWindow::~CustomWindow() {
+    // Ensure that resources are cleaned up
+    // cleanup();
+}
+
 void CustomWindow::initialize() {
     Display* display = XOpenDisplay(NULL);
     if (!display) {
