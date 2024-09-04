@@ -20,21 +20,14 @@ void UIManager::handleEvents(const EventHandler& event) {
     }
 }
 
-// Example implementation of a button
-class UIButton : public UIComponent {
-public:
-    UIButton(int x, int y, int width, int height, uint32_t color)
-            : x(x), y(y), width(width), height(height), color(color) {}
+// UIButton class implementation
+UIButton::UIButton(int x, int y, int width, int height, uint32_t color)
+        : x(x), y(y), width(width), height(height), color(color) {}
 
-    void draw(UIRenderer* renderer) override {
-        renderer->drawRectangle(x, y, width, height, color);
-    }
+void UIButton::draw(UIRenderer* renderer) {
+    renderer->drawRectangle(x, y, width, height, color);
+}
 
-    void handleEvent(const EventHandler& event) override {
-        //todo Implement logic for button press, hover, etc.
-    }
-
-private:
-    int x, y, width, height;
-    uint32_t color;
-};
+void UIButton::handleEvent(const EventHandler& event) {
+    // TODO: Implement logic for button press, hover, etc.
+}
