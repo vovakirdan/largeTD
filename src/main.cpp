@@ -1,36 +1,100 @@
+#include <iostream>
 #include "core/camera.hpp"
-#include "core/mesh.hpp"
-#include "core/viewport.hpp"
-#include "core/vector3d.hpp"
+#include "core/framebuffer.hpp"
 #include "core/matrix.hpp"
+#include "core/mesh.hpp"
+#include "core/renderer.hpp"
+#include "core/vector3d.hpp"
+#include "core/viewport.hpp"
+#include "platform/windows/window_winapi.hpp"  // Include appropriate platform header
+#include "platform/linux/window_x11.hpp"
+#include "ui/event_handler.hpp"
+#include "ui/ui_manager.hpp"
+#include "ui/ui_renderer.hpp"
+#include "core/Config.hpp"
+
+// Platform-dependent includes
+#ifdef _WIN32
+#include "platform/windows/window_winapi.hpp"
+#elif __linux__
+#include "platform/linux/window_x11.hpp"
+#endif
 
 int main() {
-    // Initialize the camera at (0, 0, 10), looking at the origin (0, 0, 0), with up direction (0, 1, 0)
-    Camera camera(Vector3D(0, 0, 10), Vector3D(0, 0, 0), Vector3D(0, 1, 0));
-    camera.setPerspective(90.0 * 3.14 / 180.0, 16.0 / 9.0, 0.1, 100.0);
+    // Initialize configuration
+    Config& config = Config::instance();
 
-    // Initialize the viewport with screen dimensions
-    Viewport viewport(800, 600);
+    // Initialize platform-specific window
+    CustomWindow* window;
+#ifdef _WIN32
+    window = new WindowWinAPI(800, 600, "3D Renderer");
+#elif __linux__
+    window = new WindowX11(800, 600, "3D Renderer");
+#endif
 
-    // A sample 3D point in world space
-    Vector3D pointInWorldSpace(1.0, 1.0, 1.0);
+    // if (!window->initialize()) {
+    //     std::cerr << "Failed to initialize the window." << std::endl;
+    //     return -1;
+    // }
 
-    // Apply view and projection transformations
-    Matrix4x4 viewMatrix = camera.getViewMatrix();
-    Matrix4x4 projectionMatrix = camera.getProjectionMatrix();
+    // Create and set up the camera
+    Vector3D cameraPosition(0.0, 0.0, 5.0);
+    Vector3D cameraTarget(0.0, 0.0, 0.0);
+    Vector3D cameraUp(0.0, 1.0, 0.0);
+    Camera camera(cameraPosition, cameraTarget, cameraUp);
+    camera.setPerspective(45.0, window->getWidth() / (float)window->getHeight(), 0.1, 100.0);
 
-    // Transform the point to camera space
-    Vector3D pointInCameraSpace = pointInWorldSpace.transform(viewMatrix);
+    // Create the framebuffer and viewport
+    Framebuffer framebuffer(window->getWidth(), window->getHeight());
+    Viewport viewport(window->getWidth(), window->getHeight());
 
-    // Transform the point to clip space
-    Vector3D pointInClipSpace = pointInCameraSpace.transform(projectionMatrix);
+    // Load or create the mesh
+    Mesh mesh;
+    if (!mesh.loadFromOBJ("../models/airboat.obj")) { // Provide a path to an OBJ file
+        std::cerr << "Failed to load mesh from OBJ file." << std::endl;
+        return -1;
+    }
 
-    // Apply the viewport transformation to get screen coordinates
-    Vector3D pointOnScreen = viewport.applyViewportTransformation(pointInClipSpace);
+    // Initialize the renderer
+    Renderer renderer(&mesh, &camera, &viewport, &framebuffer);
 
-    // Print the screen coordinates
-    std::cout << "Screen coordinates: (" << pointOnScreen.x << ", " << pointOnScreen.y << ")" << std::endl;
-    // generate an entry point in app
+    // Set up the UI Renderer and UI Manager
+    UIRenderer uiRenderer(&framebuffer);
+    UIManager uiManager(&uiRenderer);
+
+    // Example UI Component: a simple button
+    UIButton button(10, 10, 100, 30, 0xFF00FF00); // Green button
+    uiManager.addComponent(&button);
+
+    // Event Handler
+    EventHandler eventHandler;
+
+    // Main loop
+    window->mainLoop();  // Handles platform-specific event loop
+    
+    // Render loop within the main loop
+    while (true) {
+        // Poll events
+        eventHandler.pollEvents();
+
+        // Update camera or other scene components
+
+        // Clear the framebuffer
+        framebuffer.clear(config.getFramebufferDefaultColor());
+
+        // Render the mesh
+        renderer.render();
+
+        // Render the UI
+        uiManager.renderUI();
+
+        // Present the rendered frame
+        window->present(framebuffer);
+    }
+
+    // Cleanup is handled by destructors
+    window->cleanup();
+    delete window;
 
     return 0;
 }
