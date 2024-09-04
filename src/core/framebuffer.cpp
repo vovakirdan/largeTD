@@ -1,6 +1,6 @@
 #include "framebuffer.hpp"
 
-Framebuffer::Framebuffer(int width, int height) : width(width), height(height), buffer(width * height, 0x000000FF) {}
+Framebuffer::Framebuffer(int width, int height) : width(width), height(height), buffer(width * height, Config::instance().getFramebufferDefaultColor()) {}
 
 void Framebuffer::clear(uint32_t color) {
     std::fill(buffer.begin(), buffer.end(), color);

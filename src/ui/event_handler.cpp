@@ -1,6 +1,7 @@
 #include "event_handler.hpp"
 #ifdef _WIN32
 #include <windows.h>
+#include <windowsx.h>
 #else
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
