@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include "Config.hpp"
 
 // Default constructor - Identity matrix
 Matrix4x4::Matrix4x4() {
@@ -188,7 +189,7 @@ Matrix4x4 Matrix4x4::scaling(double sx, double sy, double sz) {
 // Static method for creating a rotation matrix around the X-axis
 Matrix4x4 Matrix4x4::rotationX(double angle) {
     Matrix4x4 result;
-    double rad = angle * M_PI / 180.0;
+    double rad = angle * Config::instance().getPI() / 180.0;
     result.m[1][1] = cos(rad);
     result.m[1][2] = -sin(rad);
     result.m[2][1] = sin(rad);
@@ -199,7 +200,7 @@ Matrix4x4 Matrix4x4::rotationX(double angle) {
 // Static method for creating a rotation matrix around the Y-axis
 Matrix4x4 Matrix4x4::rotationY(double angle) {
     Matrix4x4 result;
-    double rad = angle * M_PI / 180.0;
+    double rad = angle * Config::instance().getPI() / 180.0;
     result.m[0][0] = cos(rad);
     result.m[0][2] = sin(rad);
     result.m[2][0] = -sin(rad);
@@ -210,7 +211,7 @@ Matrix4x4 Matrix4x4::rotationY(double angle) {
 // Static method for creating a rotation matrix around the Z-axis
 Matrix4x4 Matrix4x4::rotationZ(double angle) {
     Matrix4x4 result;
-    double rad = angle * M_PI / 180.0;
+    double rad = angle * Config::instance().getPI() / 180.0;
     result.m[0][0] = cos(rad);
     result.m[0][1] = -sin(rad);
     result.m[1][0] = sin(rad);
