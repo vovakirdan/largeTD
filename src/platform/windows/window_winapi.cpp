@@ -2,6 +2,7 @@
 
 #include <windows.h>  // Include Windows header for LRESULT, HWND, etc.
 #include "window_winapi.hpp"
+#include "../../core/framebuffer.hpp"
 
 LRESULT CALLBACK WindowWinAPI::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     WindowWinAPI* window = reinterpret_cast<WindowWinAPI*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));

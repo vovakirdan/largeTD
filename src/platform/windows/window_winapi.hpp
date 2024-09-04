@@ -13,10 +13,13 @@ public:
     void initialize() override;
     void cleanup() override;
     void mainLoop() override;
+    int getWidth() const;
+    int getHeight() const;
     void present(Framebuffer& framebuffer) override;
 
 private:
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    HWND platformWindow;
 };
 
 #endif

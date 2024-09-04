@@ -1,10 +1,9 @@
 #ifndef WINDOW_X11_HPP
 #define WINDOW_X11_HPP
 
+#include "../../ui/window.hpp"
 #ifdef __unix__
 #include <X11/Xlib.h> // Include X11 library to define Display
-#endif
-#include "../../ui/window.hpp"
 
 class WindowX11 : public CustomWindow {
 public:
@@ -20,4 +19,5 @@ private:
     Display* display;  // Handle to the X server
 };
 
+#endif
 #endif // WINDOW_X11_HPP

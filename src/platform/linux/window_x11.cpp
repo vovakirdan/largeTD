@@ -1,3 +1,4 @@
+#ifdef __unix__
 #include "window_x11.hpp"
 #include <X11/Xutil.h>
 #include <iostream>
@@ -52,3 +53,4 @@ void WindowX11::mainLoop() {
 void WindowX11::present(Framebuffer& framebuffer) {
     // TODO: Implement framebuffer drawing for X11 (or use shared memory)
 }
+#endif
