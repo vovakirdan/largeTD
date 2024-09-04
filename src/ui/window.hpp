@@ -2,6 +2,9 @@
 #define CUSTOM_WINDOW_HPP
 
 #include <string>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 class Framebuffer; // Forward declaration of Framebuffer class
 
