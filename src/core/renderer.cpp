@@ -39,6 +39,13 @@ void Renderer::render() {
 
     const std::vector<int>& indices = mesh->getIndices();
     for (size_t i = 0; i < indices.size(); i += 3) {
+        // Ensure indices are within bounds of transformedVertices
+        if (indices[i] >= transformedVertices.size() ||
+            indices[i + 1] >= transformedVertices.size() ||
+            indices[i + 2] >= transformedVertices.size()) {
+            std::cerr << "Index out of bounds in transformedVertices.\n";
+            continue; // Skip this triangle if any index is out of bounds
+        }
         drawTriangle(transformedVertices[indices[i]],
                      transformedVertices[indices[i + 1]],
                      transformedVertices[indices[i + 2]],
