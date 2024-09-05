@@ -68,7 +68,7 @@ void CustomWindow::cleanup() {
     }
 }
 
-void CustomWindow::mainLoop() {
+void CustomWindow::mainLoop(std::function<void()> renderCallback) {
     MSG msg = {};
     while (msg.message != WM_QUIT) {
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -76,6 +76,7 @@ void CustomWindow::mainLoop() {
             DispatchMessage(&msg);
         } else {
             // todo Run the rendering loop, process input, update the scene, etc.
+            renderCallback();
         }
     }
 }

@@ -50,7 +50,7 @@ int main() {
 
     // Load or create the mesh
     Mesh mesh;
-    if (!mesh.loadFromOBJ("../models/airboat.obj")) { // Provide a path to an OBJ file
+    if (!mesh.loadFromOBJ("H:\\large3d\\models\\airboat.obj")) { // Provide a path to an OBJ file
         std::cerr << "Failed to load mesh from OBJ file." << std::endl;
         return -1;
     }
@@ -70,10 +70,7 @@ int main() {
     EventHandler eventHandler;
 
     // Main loop
-    window->mainLoop();  // Handles platform-specific event loop
-    
-    // Render loop within the main loop
-    while (true) {
+    window->mainLoop([&]() {
         // Poll events
         eventHandler.pollEvents();
 
@@ -90,7 +87,7 @@ int main() {
 
         // Present the rendered frame
         window->present(framebuffer);
-    }
+        });
 
     // Cleanup is handled by destructors
     window->cleanup();

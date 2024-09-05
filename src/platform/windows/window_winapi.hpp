@@ -2,6 +2,7 @@
 #define WINDOW_WINAPI_HPP
 
 #include "../../ui/window.hpp"
+#include <functional>
 #ifdef _WIN32
 #include <windows.h>
 
@@ -12,7 +13,7 @@ public:
 
     void initialize() override;
     void cleanup() override;
-    void mainLoop() override;
+    void mainLoop(std::function<void()> renderCallback) override;
     int getWidth() const;
     int getHeight() const;
     void present(Framebuffer& framebuffer) override;

@@ -63,7 +63,7 @@ void WindowWinAPI::cleanup() {
     }
 }
 
-void WindowWinAPI::mainLoop() {
+void WindowWinAPI::mainLoop(std::function<void()> renderCallback) {
     MSG msg = {};
     while (msg.message != WM_QUIT) {
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -71,6 +71,7 @@ void WindowWinAPI::mainLoop() {
             DispatchMessage(&msg);
         } else {
             // Run the rendering loop, process input, update the scene, etc.
+            renderCallback();
         }
     }
 }

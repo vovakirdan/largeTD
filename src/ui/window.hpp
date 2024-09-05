@@ -2,6 +2,7 @@
 #define CUSTOM_WINDOW_HPP
 
 #include <string>
+#include <functional>
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -15,7 +16,7 @@ public:
 
     virtual void initialize() = 0;
     virtual void cleanup() = 0;
-    virtual void mainLoop() = 0;
+    virtual void mainLoop(std::function<void()> renderCallback) = 0;
     virtual void present(Framebuffer& framebuffer) = 0;
 
     int getWidth() const;
